@@ -1,7 +1,9 @@
 package bg.sofia.uni.fmi.mjt.glovo;
 
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.ControlCenter;
+import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.Location;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntity;
+import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntityType;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.Delivery;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryInfo;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.ShippingMethod;
@@ -29,7 +31,8 @@ public class Glovo implements GlovoApi {
 
         DeliveryInfo deliveryInfo = controlCenter.findOptimalDeliveryGuy(restaurant.location(),
             client.location(), -1, -1, ShippingMethod.CHEAPEST);
-        if (Objects.isNull(deliveryInfo.deliveryGuyLocation())) {
+
+        if (Objects.isNull(deliveryInfo)) {
             throw new NoAvailableDeliveryGuyException("No available delivery guy was found for this order.");
         }
 
@@ -48,7 +51,7 @@ public class Glovo implements GlovoApi {
         DeliveryInfo deliveryInfo = controlCenter.findOptimalDeliveryGuy(restaurant.location(),
             client.location(), -1, -1, ShippingMethod.FASTEST);
 
-        if (Objects.isNull(deliveryInfo.deliveryGuyLocation())) {
+        if (Objects.isNull(deliveryInfo)) {
             throw new NoAvailableDeliveryGuyException("No available delivery guy was found for this order.");
         }
 
@@ -68,7 +71,7 @@ public class Glovo implements GlovoApi {
         DeliveryInfo deliveryInfo = controlCenter.findOptimalDeliveryGuy(restaurant.location(),
             client.location(), maxPrice, -1, ShippingMethod.FASTEST);
 
-        if (Objects.isNull(deliveryInfo.deliveryGuyLocation())) {
+        if (Objects.isNull(deliveryInfo)) {
             throw new NoAvailableDeliveryGuyException("No available delivery guy was found for this order.");
         }
 
@@ -87,7 +90,7 @@ public class Glovo implements GlovoApi {
         DeliveryInfo deliveryInfo = controlCenter.findOptimalDeliveryGuy(restaurant.location(),
             client.location(), -1, maxTime, ShippingMethod.CHEAPEST);
 
-        if (Objects.isNull(deliveryInfo.deliveryGuyLocation())) {
+        if (Objects.isNull(deliveryInfo)) {
             throw new NoAvailableDeliveryGuyException("No available delivery guy was found for this order.");
         }
 

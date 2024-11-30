@@ -39,6 +39,10 @@ public class PathFinder {
 
         getDeliveryJourneyInfo(restaurantLocation, clientLocation, maxPrice, maxTime, shippingMethod);
 
+        if (Objects.isNull(deliveryJourney.getDeliveryGuy())) {
+            return null;
+        }
+
         double deliveryPrice = getDeliveryPrice();
         int estimatedDeliveryTime = getEstimatedDeliveryTime();
         DeliveryType deliveryType = getDeliveryType();
