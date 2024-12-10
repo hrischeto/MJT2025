@@ -24,7 +24,6 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
     }
 
     private void validateFile(File imageFile) throws IOException {
-
         if (Objects.isNull(imageFile)) {
             throw new IllegalArgumentException("Image file is null.");
         }
@@ -94,7 +93,6 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
 
     @Override
     public void saveImage(BufferedImage image, File imageFile) throws IOException {
-
         if (Objects.isNull(image)) {
             throw new IllegalArgumentException("Image is null.");
         }
@@ -104,7 +102,6 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
     }
 
     private void validateSavingLocation(File imageFile) throws IOException {
-
         if (Objects.isNull(imageFile)) {
             throw new IllegalArgumentException("File to save the image to is null.");
         }

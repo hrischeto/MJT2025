@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 public class SobelEdgeDetection implements EdgeDetectionAlgorithm {
-    private final ImageAlgorithm greyscaler;
+    private final ImageAlgorithm grayscaler;
 
     private final int oneByte = 255;
     private final int shiftWithOneByte = 8;
@@ -24,16 +24,14 @@ public class SobelEdgeDetection implements EdgeDetectionAlgorithm {
     };
 
     public SobelEdgeDetection(ImageAlgorithm grayscaleAlgorithm) {
-        greyscaler = grayscaleAlgorithm;
+        grayscaler = grayscaleAlgorithm;
     }
 
     @Override
     public BufferedImage process(BufferedImage image) {
-        if (Objects.isNull(image)) {
-            throw new IllegalArgumentException("Image is null");
-        }
+        validateImage(image);
 
-        BufferedImage grayscaleImage = greyscaler.process(image);
+        BufferedImage grayscaleImage = grayscaler.process(image);
         int width = grayscaleImage.getWidth();
         int height = grayscaleImage.getHeight();
         BufferedImage edgeImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -57,5 +55,11 @@ public class SobelEdgeDetection implements EdgeDetectionAlgorithm {
             }
         }
         return edgeImage;
+    }
+
+    private void validateImage(BufferedImage image) {
+        if (Objects.isNull(image)) {
+            throw new IllegalArgumentException("Image is null");
+        }
     }
 }

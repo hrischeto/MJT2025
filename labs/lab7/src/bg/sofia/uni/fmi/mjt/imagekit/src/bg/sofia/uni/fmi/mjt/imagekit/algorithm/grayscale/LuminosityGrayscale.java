@@ -17,14 +17,11 @@ public class LuminosityGrayscale implements GrayscaleAlgorithm {
 
     @Override
     public BufferedImage process(BufferedImage image) {
-        if (Objects.isNull(image)) {
-            throw new IllegalArgumentException("Image is null");
-        }
+        validateImage(image);
 
         BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         for (int j = 0; j < image.getHeight(); j++) {
-
             for (int i = 0; i < image.getWidth(); i++) {
                 int originalPixel = image.getRGB(i, j);
 
@@ -40,5 +37,11 @@ public class LuminosityGrayscale implements GrayscaleAlgorithm {
             }
         }
         return result;
+    }
+
+    private void validateImage(BufferedImage image) {
+        if (Objects.isNull(image)) {
+            throw new IllegalArgumentException("Image is null");
+        }
     }
 }
