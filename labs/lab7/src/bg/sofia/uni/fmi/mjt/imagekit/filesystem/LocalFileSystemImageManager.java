@@ -24,19 +24,20 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
     }
 
     private void validateFile(File imageFile) throws IOException {
-
         if (Objects.isNull(imageFile)) {
             throw new IllegalArgumentException("Image file is null.");
         }
 
-        Path imagePath = imageFile.toPath();
-        if (Files.notExists(imagePath)) {
+        if (!imageFile.exists()) {
             throw new IOException("File does not exist.");
         }
+
+        Path imagePath = imageFile.toPath();
 
         if (!Files.isRegularFile(imagePath)) {
             throw new IOException("File is not regular.");
         }
+
         String extension = getFileExtension(imagePath);
         if (extension.isEmpty() || !SupportedFormats.isSupported(extension)) {
             throw new IOException("File format not supported.");
@@ -44,17 +45,24 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
     }
 
     private String getFileExtension(Path filePath) {
+        if (Objects.isNull(filePath)) {
+            throw new IllegalArgumentException("FilePath was null.");
+        }
+
         String fileName = filePath.getFileName().toString();
 
         int lastIndex = fileName.lastIndexOf('.');
-        return fileName.substring(lastIndex + 1);
+        if (lastIndex != -1) {
+            return fileName.substring(lastIndex + 1);
+        }
+        return "";
     }
 
     @Override
     public List<BufferedImage> loadImagesFromDirectory(File imagesDirectory) throws IOException {
-        Path directoryPath = imagesDirectory.toPath();
-        validateDirectory(directoryPath);
+        validateDirectory(imagesDirectory);
 
+        Path directoryPath = imagesDirectory.toPath();
         List<BufferedImage> toReturn = new ArrayList<>();
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directoryPath)) {
@@ -70,22 +78,21 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
         return toReturn;
     }
 
-    private void validateDirectory(Path imageDirectory) throws IOException {
+    private void validateDirectory(File imageDirectory) throws IOException {
         if (Objects.isNull(imageDirectory)) {
             throw new IllegalArgumentException("Image directory is null.");
         }
-
-        if (!Files.exists(imageDirectory)) {
+        Path directoryPath = imageDirectory.toPath();
+        if (!Files.exists(directoryPath)) {
             throw new IOException("Directory does not exist.");
         }
-        if (!Files.isDirectory(imageDirectory)) {
+        if (!Files.isDirectory(directoryPath)) {
             throw new IOException("File is not a directory.");
         }
     }
 
     @Override
     public void saveImage(BufferedImage image, File imageFile) throws IOException {
-
         if (Objects.isNull(image)) {
             throw new IllegalArgumentException("Image is null.");
         }
@@ -95,7 +102,6 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
     }
 
     private void validateSavingLocation(File imageFile) throws IOException {
-
         if (Objects.isNull(imageFile)) {
             throw new IllegalArgumentException("File to save the image to is null.");
         }
@@ -105,8 +111,13 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
         if (Files.exists(filePath)) {
             throw new IOException("File already exists.");
         }
-        if (Objects.isNull(filePath.getParent())) {
+        if (Objects.nonNull(filePath.getParent()) && Files.notExists(filePath.getParent())) {
             throw new IOException("Parent directory does not exist.");
+        }
+
+        String extension = getFileExtension(filePath);
+        if (extension.isEmpty() || !SupportedFormats.isSupported(extension)) {
+            throw new IOException("File format not supported.");
         }
     }
 }
